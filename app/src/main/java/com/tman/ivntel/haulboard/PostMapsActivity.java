@@ -78,12 +78,17 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                         break;
                     case R.id.submit_item:
                         Snackbar.make(coordinatorLayout, "Submit", Snackbar.LENGTH_LONG).show();
-                        if (interstitial.isLoaded()) {
-                            interstitial.show();
+                        if (MapsActivity.firebaseID == null) {
+                            if (interstitial.isLoaded()) {
+                                interstitial.show();
+                            } else {
+                                saveLocationData();
+                            }
+                            break;
                         } else {
-                            saveLocationData();
+                            Intent i = new Intent(PostMapsActivity.this, MapsActivity.class);
+                            startActivity(i);
                         }
-                        break;
                 }
             }
 
@@ -130,10 +135,6 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-
-    @Override
-    public void onBackPressed() {
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
