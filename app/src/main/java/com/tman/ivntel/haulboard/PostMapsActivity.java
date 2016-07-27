@@ -70,8 +70,6 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                 switch (menuItemId) {
                     case R.id.post_home:
                         Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
-                        Intent i = new Intent(PostMapsActivity.this, PostActivity.class);
-                        startActivity(i);
                         break;
                     case R.id.post_how_to_item:
                         Snackbar.make(coordinatorLayout, "How To", Snackbar.LENGTH_LONG).show();

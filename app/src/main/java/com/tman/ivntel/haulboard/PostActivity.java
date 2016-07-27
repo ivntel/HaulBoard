@@ -81,6 +81,12 @@ public class PostActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+    }
+
     public void buttonOnClickEnterItem(View v) {
         item = (EditText) findViewById(R.id.item);
         itemText = (TextView) findViewById(R.id.itemText);
@@ -117,7 +123,6 @@ public class PostActivity extends ActionBarActivity {
             intent.putExtra("time",mTime);
             intent.putExtra("contact",mContact);
             startActivity(intent);
-            Log.d("Haul Data: ", "Values" + item + " " + date  + " " + time + " "+ contact + " ");
         }
         else{
             Toast.makeText(this, "Missing Information!", Toast.LENGTH_LONG).show();

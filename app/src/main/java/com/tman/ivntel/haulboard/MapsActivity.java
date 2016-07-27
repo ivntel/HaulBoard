@@ -203,6 +203,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     deviceMatchBool = false;
                 }
                 break;
+            case R.id.refresh:
+                Toast.makeText(this, "Postings Refreshed", Toast.LENGTH_SHORT).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
