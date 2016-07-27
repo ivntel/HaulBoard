@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "388838696989",
+    "firebase_url": "https://haulboard.firebaseio.com",
+    "project_id": "haulboard",
+    "storage_bucket": "haulboard.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388838696989:android:8e2c7a777924cd6d",
+        "android_client_info": {
+          "package_name": "com.tman.ivntel.haulboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388838696989-jtud4kb291occeq6val6qebk70242j61.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe1VoSsjr3pi4aC-2HiSyH-3UpMVNQWrQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HaulBoard</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_post_maps">Map</string>
+    <string name="banner_ad_unit_id">ca-app-pub-5998829657575629/3901962794</string>
+    <string name="main_admob_interstitial_id">ca-app-pub-5998829657575629/5378695996</string>
+    <string name="admob_interstitial_id">ca-app-pub-5998829657575629/9808895596</string>
+</resources>

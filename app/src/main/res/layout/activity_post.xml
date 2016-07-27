@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/post">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#696969">
+
+    <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item"
+            android:padding="20dp"
+            android:hint="Enter Item Description"
+            android:layout_marginBottom="10dp"
+            android:background="#FFF5EE" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="Submit Item"
+            android:onClick="buttonOnClickEnterItem"
+            android:id="@+id/itemButton"
+            android:padding="20dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_gravity="center_vertical|center_horizontal" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/itemText"
+            android:text="No Item Entered"
+            android:textSize="30dp"
+            android:padding="20dp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"/>
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/date"
+                    android:padding="20dp"
+                    android:hint="Enter Pick Up Date"
+                    android:background="#FFF5EE"
+                    android:layout_marginBottom="10dp"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:text="Submit Date"
+                    android:onClick="buttonOnClickEnterDate"
+                    android:id="@+id/dateButton"
+                    android:padding="20dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:background="@drawable/buttonshape"
+                    android:shadowColor="#A8A8A8"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="5"
+                    android:layout_gravity="center_vertical|center_horizontal" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dateText"
+                    android:text="No Date Entered"
+                    android:textSize="30dp"
+                    android:padding="20dp"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:padding="20dp"
+            android:hint="Enter Pick Up Time"
+            android:layout_marginBottom="10dp"
+            android:background="#FFF5EE"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="Submit Time"
+            android:onClick="buttonOnClickEnterTime"
+            android:id="@+id/timeButton"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:padding="20dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeText"
+            android:text="No Time Entered"
+            android:textSize="30dp"
+            android:padding="20dp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"/>
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contact"
+            android:padding="20dp"
+            android:hint="Enter Contact Information"
+            android:layout_marginBottom="10dp"
+            android:background="#FFF5EE"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="Submit Contact Information"
+            android:onClick="buttonOnClickEnterContact"
+            android:id="@+id/contactButton"
+            android:padding="20dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contactText"
+            android:text="No Contact Information Entered"
+            android:textSize="30dp"
+            android:padding="20dp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"/>
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buttonOnClickLocation"
+            android:padding="20dp"
+            android:text="Choose Pick Up Location"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"/>
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+    </LinearLayout>
+</ScrollView>
