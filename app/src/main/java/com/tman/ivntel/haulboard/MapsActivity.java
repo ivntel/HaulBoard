@@ -135,9 +135,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (menuItemId) {
                     case R.id.home_item:
                         Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
+                        Intent i = new Intent(MapsActivity.this, MapsActivity.class);
+                        startActivity(i);
                         break;
                 }
             }
