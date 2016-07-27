@@ -37,6 +37,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:9.0.2'
     compile 'com.android.support:multidex:'
     compile 'com.android.support:design:23.1.1'
-    compile 'com.roughike:bottom-bar:1.2.1'
+    compile 'com.roughike:bottom-bar:1.4.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -107,13 +107,7 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onAdClosed() {
                 requestNewInterstitial();
-                /*if(MainActivity.firebaseID != null) {
-                    Intent i = new Intent(PostMapsActivity.this, MainActivity.class);
-                    startActivity(i);
-                }
-                else{*/
-                    saveLocationData();
-                //}
+                saveLocationData();
             }
         });
         requestNewInterstitial();
@@ -162,29 +156,9 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onMarkerDrag(Marker marker) {
                 // TODO Auto-generated method stub
-                // Toast.makeText(MainActivity.this, "Dragging",
-                // Toast.LENGTH_SHORT).show();
-                System.out.println("Dragging");
+                Toast.makeText(PostMapsActivity.this, "Dragging", Toast.LENGTH_SHORT).show();
             }
         });
-        /*Button button = (Button) findViewById(R.id.submit);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (interstitial.isLoaded()) {
-                    interstitial.show();*/
-                    //test
-                    //saveLocationData();
-                /*} else {
-                    saveLocationData();
-                }
-                //saving
-                /*if (MainActivity.firebaseID != null){
-                    Toast.makeText(PostMapsActivity.this, "Already Have A Posting", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(PostMapsActivity.this, MainActivity.class);
-                    startActivity(i);
-                }
-            }
-        });*/
     }
 
     private void saveLocationData() {
@@ -210,7 +184,6 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                     editor.putString("FireBaseID", tempFirebaseID);
                     editor.commit();
 
-                    //MainActivity.firebaseID = tempFirebaseID;
                     MapsActivity.myData.add(hData);
                 }
             }

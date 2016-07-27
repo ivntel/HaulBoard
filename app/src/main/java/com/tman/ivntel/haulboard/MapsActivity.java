@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.provider.Settings;
+import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnMenuTabSelectedListener;
 import com.tman.ivntel.haulboard.objects.HaulData;
 
@@ -61,7 +63,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public String deviceID;
     public static ArrayList<HaulData> myData = new ArrayList<HaulData>();
     public static String firebaseID = null;
-    private InterstitialAd interstitial;
     public static Firebase firebaseRef;
     private boolean deviceMatchBool;
 
@@ -78,10 +79,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.bottom_buttons_activity);
 
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
-        bottomBar.setItemsFromMenu(R.menu.bottom_buttons_menu, new OnMenuTabSelectedListener() {
+        //bottomBar.setItemsFromMenu(R.menu.bottom_buttons_menu, new OnMenuTabSelectedListener() {
+        bottomBar.useFixedMode();
+        bottomBar.setItems(R.menu.bottom_buttons_menu);
+        bottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
             @Override
-            public void onMenuItemSelected(int itemId) {
-                switch (itemId) {
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
                     case R.id.home_item:
                         Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
                         break;
@@ -128,8 +132,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                 }
             }
-        });
 
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+
+            }
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -176,7 +184,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int id = item.getItemId();
 
         switch(id){
-
             case R.id.how_to:
                 new AlertDialog.Builder(this)
                         .setTitle("About/How To Use HaulBoard")
