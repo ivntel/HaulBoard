@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,12 +111,13 @@ public class PostActivity extends ActionBarActivity {
 
     public void buttonOnClickLocation(View v) {
         if(mItem != null && mDate != null && mTime != null && mContact != null) {
-            Intent intent = new Intent(this, PostMapsActivity.class);
+            Intent intent = new Intent(PostActivity.this, PostMapsActivity.class);
             intent.putExtra("item",mItem);
             intent.putExtra("date",mDate);
             intent.putExtra("time",mTime);
             intent.putExtra("contact",mContact);
             startActivity(intent);
+            Log.d("Haul Data: ", "Values" + item + " " + date  + " " + time + " "+ contact + " ");
         }
         else{
             Toast.makeText(this, "Missing Information!", Toast.LENGTH_LONG).show();

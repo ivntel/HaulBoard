@@ -184,7 +184,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int id = item.getItemId();
 
         switch(id){
-            case R.id.how_to:
+            case R.id.about:
                 new AlertDialog.Builder(this)
                         .setTitle("About/How To Use HaulBoard")
                         .setMessage("About:\n\nDon't have a vehicle or one large enough to haul certain items, post on this app and find someone to help you haul your item quick and easy. If you have a vehicle and are willing to help others with a haul job post your availability on here as well.\n\n"+ "How To Use:\n\nSee Haul Postings: See what haul jobs or who is available for a haul job in your area" + "\n\nPost A Haul: Post a haul job that you need done or post your availbility as a hauler, you are only able to have one active posting at a time" + "\n\nDelete Posting: Deletes your current posting when your haul job has been completed or is no longer available")

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.provider.Settings;
+import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnMenuTabSelectedListener;
 import com.tman.ivntel.haulboard.objects.HaulData;
 
@@ -60,10 +62,12 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.post_bottom_buttons_activity);
 
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
-        bottomBar.setItemsFromMenu(R.menu.post_bottom_buttons_menu, new OnMenuTabSelectedListener() {
+        bottomBar.useFixedMode();
+        bottomBar.setItems(R.menu.post_bottom_buttons_menu);
+        bottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
             @Override
-            public void onMenuItemSelected(int itemId) {
-                switch (itemId) {
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
                     case R.id.post_home:
                         Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
                         Intent i = new Intent(PostMapsActivity.this, PostActivity.class);
@@ -81,13 +85,16 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                         Snackbar.make(coordinatorLayout, "Submit", Snackbar.LENGTH_LONG).show();
                         if (interstitial.isLoaded()) {
                             interstitial.show();
-                            //test
-                            //saveLocationData();
                         } else {
                             saveLocationData();
                         }
                         break;
                 }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+
             }
         });
 
@@ -156,7 +163,7 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onMarkerDrag(Marker marker) {
                 // TODO Auto-generated method stub
-                Toast.makeText(PostMapsActivity.this, "Dragging", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PostMapsActivity.this, "Dragging", Toast.LENGTH_SHORT).show();
             }
         });
     }

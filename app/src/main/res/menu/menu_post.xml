@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".PostActivity">
     <item
-        android:id="@+id/how_to"
-        android:title="How To"
+        android:id="@+id/about"
+        android:title="About HaulBoard"
         android:orderInCategory="100"
         app:showAsAction="never">
     </item>
