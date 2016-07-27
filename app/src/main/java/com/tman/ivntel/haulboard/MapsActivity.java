@@ -86,9 +86,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
-                    case R.id.home_item:
-                        Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
-                        break;
                     case R.id.post_haul:
                         Snackbar.make(coordinatorLayout, "Already Have An Active Post", Snackbar.LENGTH_LONG).show();
                         final String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -135,7 +132,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onMenuTabReSelected(@IdRes int menuItemId) {
-
+                switch (menuItemId) {
+                    case R.id.home_item:
+                        Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                        break;
+                }
             }
         });
 

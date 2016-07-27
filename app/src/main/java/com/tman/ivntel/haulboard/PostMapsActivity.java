@@ -68,9 +68,6 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
-                    case R.id.post_home:
-                        Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
-                        break;
                     case R.id.post_how_to_item:
                         Snackbar.make(coordinatorLayout, "How To", Snackbar.LENGTH_LONG).show();
                         new AlertDialog.Builder(PostMapsActivity.this)
@@ -92,7 +89,13 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
 
             @Override
             public void onMenuTabReSelected(@IdRes int menuItemId) {
-
+                switch (menuItemId) {
+                    case R.id.post_home:
+                        Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
+                        Intent i = new Intent(PostMapsActivity.this, MapsActivity.class);
+                        startActivity(i);
+                        break;
+                }
             }
         });
 
