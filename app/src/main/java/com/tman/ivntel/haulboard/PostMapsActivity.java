@@ -78,17 +78,13 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                         break;
                     case R.id.submit_item:
                         Snackbar.make(coordinatorLayout, "Submit", Snackbar.LENGTH_LONG).show();
-                        if (MapsActivity.firebaseID == null) {
-                            if (interstitial.isLoaded()) {
+
+                        if (interstitial.isLoaded()) {
                                 interstitial.show();
-                            } else {
+                        } else {
                                 saveLocationData();
                             }
                             break;
-                        } else {
-                            Intent i = new Intent(PostMapsActivity.this, MapsActivity.class);
-                            startActivity(i);
-                        }
                 }
             }
 
