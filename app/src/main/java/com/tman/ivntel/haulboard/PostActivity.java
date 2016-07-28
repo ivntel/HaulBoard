@@ -117,6 +117,7 @@ public class PostActivity extends ActionBarActivity {
             intent.putExtra("time",mTime);
             intent.putExtra("contact",mContact);
             startActivity(intent);
+            finish();
         }
         else{
             Toast.makeText(this, "Missing Information!", Toast.LENGTH_LONG).show();

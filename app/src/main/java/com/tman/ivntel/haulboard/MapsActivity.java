@@ -2,6 +2,7 @@ package com.tman.ivntel.haulboard;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -67,6 +68,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String firebaseID = null;
     public static Firebase firebaseRef;
     private boolean deviceMatchBool;
+    private ProgressDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,10 +110,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onMenuTabReSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
                     case R.id.post_haul:
-                        Snackbar.make(coordinatorLayout, "Already Have An Active Post", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(coordinatorLayout, "Post A Haul", Snackbar.LENGTH_LONG).show();
                         final String deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                        firebaseRef.addValueEventListener(new ValueEventListener() {
+                        firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 MapsActivity.myData.clear();
@@ -143,36 +146,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //TRIAL
-            firebaseRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    MapsActivity.myData.clear();
-
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        //Getting the data from snapshot & where error is happening
-                        HaulData hData = postSnapshot.getValue(HaulData.class);
-                        Log.d("Haul Date: ", hData.getContact() + hData.getLat() + hData.getLng());
-                        MapsActivity.myData.add(hData);
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-                }
-            });
         }
-        //TRIAL
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -222,30 +197,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mMap!=null){
+            reloadMap(mMap);
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (myData.size() == 0) {
-        //if (MainActivity.firebaseID == null) {
-            LatLng job = new LatLng(48.960585, -97.246712);
-            mMap.addMarker(new MarkerOptions().position(job).title("JOB").snippet("Item: " + "No data" + "\n" + "Date: " + "No data" + "\n" + "Time: " + "No data" + "\n" + "Contact: " + "No data").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(job, 3));//zoom level = 16 goes up to 21
-        } else {
-            for(HaulData data: myData) {
-                item = data.getItem();
-                date = data.getDate();
-                time = data.getTime();
-                contact = data.getContact();
-                lat = data.getLat();
-                lng = data.getLng();
-                deviceID = data.getDeviceID();
-                Log.d("Haul Date Receive: ", "Values" + item + " " + date  + " " + time + " "+ contact + " " + lat + " " + lng);
 
-                LatLng job = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
-
-                mMap.addMarker(new MarkerOptions().position(job).title("JOB").snippet("Item: " + item + "\n" + "Date: " + date + "\n" + "Time: " + time + "\n" + "Contact: " + contact).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(job, 7));//zoom level = 16 goes up to 21
-            }
-        }
+        reloadMap(mMap);
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -279,6 +243,65 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         }
+
+    public void reloadMap(GoogleMap googleMap) {
+
+        mMap = googleMap;
+        showProgress(true);
+        firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                MapsActivity.myData.clear();
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    //Getting the data from snapshot & where error is happening
+                    HaulData hData = postSnapshot.getValue(HaulData.class);
+                    Log.d("Haul Date: ", hData.getContact() + hData.getLat() + hData.getLng());
+                    MapsActivity.myData.add(hData);
+
+                    showProgress(false);
+
+                }
+
+                for (HaulData data : myData) {
+                    item = data.getItem();
+                    date = data.getDate();
+                    time = data.getTime();
+                    contact = data.getContact();
+                    lat = data.getLat();
+                    lng = data.getLng();
+                    deviceID = data.getDeviceID();
+                    Log.d("Haul Date Receive: ", "Values" + item + " " + date + " " + time + " " + contact + " " + lat + " " + lng);
+
+                    LatLng job = new LatLng(Double.valueOf(lat), Double.valueOf(lng));
+
+                    mMap.addMarker(new MarkerOptions().position(job).title("JOB").snippet("Item: " + item + "\n" + "Date: " + date + "\n" + "Time: " + time + "\n" + "Contact: " + contact).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(job, 2));//zoom level = 16 goes up to 21
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+    }
+
+    public void showProgress(boolean showProgress) {
+        if (showProgress) {
+            dialog = new ProgressDialog(MapsActivity.this);
+            dialog.setMessage("Please wait...");
+            dialog.setCancelable(false);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            if(dialog!=null)
+                dialog.show();
+        } else {
+            if(dialog!=null)
+                dialog.hide();
+        }
+    }
+
 
     /*public void buttonOnClickShare(View v) {
         //screenShot = getScreenShot(v);

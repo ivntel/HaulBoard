@@ -95,6 +95,7 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                         Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
                         Intent i = new Intent(PostMapsActivity.this, MapsActivity.class);
                         startActivity(i);
+                        finish();
                         break;
                 }
             }
@@ -172,7 +173,7 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
         HaulData hData = new HaulData(item, date, time, contact, String.valueOf(lat), String.valueOf(lng), deviceID);
         MapsActivity.firebaseRef.push().setValue(hData);
 
-        MapsActivity.firebaseRef.addValueEventListener(new ValueEventListener() {
+        MapsActivity.firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 MapsActivity.myData.clear();
@@ -181,6 +182,7 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                     //Getting the data from snapshot
                     HaulData hData = postSnapshot.getValue(HaulData.class);
                     String tempFirebaseID = postSnapshot.getKey();
+                    MapsActivity.firebaseID = tempFirebaseID;
                     Log.d("Firebase key: ", tempFirebaseID);
                     Log.d("Haul Date: ", hData.getContact() + hData.getLat() + hData.getLng());
 
@@ -198,8 +200,7 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        Intent i = new Intent(PostMapsActivity.this, MapsActivity.class);
-        startActivity(i);
+        finish();
     }
 
     @Override
