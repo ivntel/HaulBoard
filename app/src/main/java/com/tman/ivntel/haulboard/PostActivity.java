@@ -81,12 +81,6 @@ public class PostActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(this, MapsActivity.class);
-        startActivity(i);
-    }
-
     public void buttonOnClickEnterItem(View v) {
         item = (EditText) findViewById(R.id.item);
         itemText = (TextView) findViewById(R.id.itemText);
