@@ -194,7 +194,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.id.delete_post:
                 if(firebaseID == null){
-                    Toast.makeText(this, "Post Deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No Post To Delete", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(this, "Post Deleted", Toast.LENGTH_SHORT).show();
                     String tempID = firebaseID;
@@ -202,6 +202,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     firebaseRef.child(tempID).removeValue();
                     getApplicationContext().getSharedPreferences("fbID", 0).edit().clear().commit();
                     deviceMatchBool = false;
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
                 }
                 break;
             case R.id.refresh:
