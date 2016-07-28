@@ -202,9 +202,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     firebaseRef.child(tempID).removeValue();
                     getApplicationContext().getSharedPreferences("fbID", 0).edit().clear().commit();
                     deviceMatchBool = false;
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
+                    Intent i = new Intent(MapsActivity.this, MapsActivity.class);
+                    startActivity(i);
                 }
                 break;
             case R.id.refresh:
