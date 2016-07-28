@@ -1,5 +1,6 @@
 package com.tman.ivntel.haulboard;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
@@ -72,6 +74,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         Firebase.setAndroidContext(this);
         firebaseRef = new Firebase(Constants.FIREBASE_URL);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         SharedPreferences sp1 = getSharedPreferences("fbID", Activity.MODE_PRIVATE);
@@ -85,6 +88,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
+                    case R.id.how_to_item:
+                        Snackbar.make(coordinatorLayout, "How To", Snackbar.LENGTH_LONG).show();
+                        new AlertDialog.Builder(MapsActivity.this)
+                                .setTitle("How To Use Haul Postings")
+                                .setMessage("Blue marker indicates the location or area of a haul job or a hauler" + "\n\nTap on the blue marker to get the information of that haul job or hauler")
+                                .setNegativeButton("Done", null)
+                                .create().show();
+                        break;
+                    case R.id.share_item:
+                        Snackbar.make(coordinatorLayout, "Share", Snackbar.LENGTH_LONG).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
                     case R.id.post_haul:
                         Snackbar.make(coordinatorLayout, "Already Have An Active Post", Snackbar.LENGTH_LONG).show();
@@ -115,28 +135,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 System.out.println("The read failed: " + firebaseError.getMessage());
                             }
                         });
-                        break;
-                    case R.id.how_to_item:
-                        Snackbar.make(coordinatorLayout, "How To", Snackbar.LENGTH_LONG).show();
-                        new AlertDialog.Builder(MapsActivity.this)
-                                .setTitle("How To Use Haul Postings")
-                                .setMessage("Blue marker indicates the location or area of a haul job or a hauler" + "\n\nTap on the blue marker to get the information of that haul job or hauler")
-                                .setNegativeButton("Done", null)
-                                .create().show();
-                        break;
-                    case R.id.share_item:
-                        Snackbar.make(coordinatorLayout, "Share", Snackbar.LENGTH_LONG).show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
-                switch (menuItemId) {
-                    case R.id.home_item:
-                        Snackbar.make(coordinatorLayout, "Home", Snackbar.LENGTH_LONG).show();
-                        Intent i = new Intent(MapsActivity.this, MapsActivity.class);
-                        startActivity(i);
                         break;
                 }
             }
@@ -208,6 +206,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             case R.id.refresh:
                 Toast.makeText(this, "Postings Refreshed", Toast.LENGTH_SHORT).show();
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);

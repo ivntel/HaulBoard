@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home_item"
-        android:title="Home"
+        android:id="@+id/post_haul"
+        android:title="Post A Haul"
         android:icon="@drawable/ic_cast_dark"/>
     <item
         android:id="@+id/how_to_item"
         android:title="How To"
-        android:icon="@drawable/ic_cast_dark"/>
-    <item
-        android:id="@+id/post_haul"
-        android:title="Post A Haul"
         android:icon="@drawable/ic_cast_dark"/>
     <item
         android:id="@+id/share_item"
