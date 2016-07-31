@@ -1,24 +1,23 @@
 package com.tman.ivntel.haulboard;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -34,7 +33,6 @@ import com.firebase.client.Firebase;
 
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,10 +43,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
-import com.roughike.bottombar.OnMenuTabSelectedListener;
 import com.tman.ivntel.haulboard.objects.HaulData;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -69,6 +69,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static Firebase firebaseRef;
     private boolean deviceMatchBool;
     private ProgressDialog dialog;
+    MarshMallowPermission marshMallowPermission;
+
 
 
     @Override
@@ -78,14 +80,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Firebase.setAndroidContext(this);
         firebaseRef = new Firebase(Constants.FIREBASE_URL);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        marshMallowPermission = new MarshMallowPermission(this);
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SharedPreferences sp1 = getSharedPreferences("fbID", Activity.MODE_PRIVATE);
         firebaseID = sp1.getString("FireBaseID", firebaseID);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.bottom_buttons_activity);
 
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
-        //bottomBar.setItemsFromMenu(R.menu.bottom_buttons_menu, new OnMenuTabSelectedListener() {
         bottomBar.useFixedMode();
         bottomBar.setItems(R.menu.bottom_buttons_menu);
         bottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
@@ -102,6 +104,67 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case R.id.share_item:
                         Snackbar.make(coordinatorLayout, "Share", Snackbar.LENGTH_LONG).show();
+
+                        if (!marshMallowPermission.checkPermissionForExternalStorage())
+                        {
+                            marshMallowPermission.requestPermissionForExternalStorage();
+                        }
+                        else
+                        {
+                            GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback()
+                            {
+                                @Override
+                                public void onSnapshotReady(Bitmap snapshot)
+                                {
+                                    try
+                                    {
+                                        View mView = findViewById(android.R.id.content).getRootView();
+                                        mView.setDrawingCacheEnabled(true);
+                                        Bitmap backBitmap = mView.getDrawingCache();
+                                        Bitmap bmOverlay = Bitmap.createBitmap(
+                                                backBitmap.getWidth(), backBitmap.getHeight(),
+                                                Bitmap.Config.ARGB_8888);
+                                        Canvas canvas = new Canvas(bmOverlay);
+                                        canvas.drawBitmap(backBitmap, 0, 0, null);
+                                        canvas.drawBitmap(snapshot, 0, 160, null);
+                                        /*FileOutputStream out = new FileOutputStream(
+                                                Environment.getExternalStorageDirectory()
+                                                        + "/MapScreenShot"
+                                                        + System.currentTimeMillis() + ".png");*/
+                                        File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "/MapScreenShots");
+
+                                        Log.i("MyFile",""+sampleDir);
+
+                                        // Created directory if not exist
+                                        if(!sampleDir.exists())
+                                        {
+                                            sampleDir.mkdirs();
+                                        }
+                                        Date d = new Date();
+                                        File fn = new File(sampleDir+"/"+"Map"+d.getTime()+".png");
+                                        FileOutputStream out = new FileOutputStream(fn);
+                                        bmOverlay.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+                                        Intent share = new Intent(Intent.ACTION_SEND);
+                                        share.setType("image/*");
+
+                                        File imageFileToShare = new File(fn.getAbsolutePath());
+
+                                        Uri uri = Uri.fromFile(imageFileToShare);
+                                        share.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+                                        share.putExtra(android.content.Intent.EXTRA_TEXT, "These are people around the area looking to get things hauled or looking to haul!");
+                                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                                        startActivity(Intent.createChooser(share, "Share Screenshot Using:"));
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                            mMap.snapshot(callback);
+                        }
                         break;
                 }
             }
@@ -146,7 +209,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -192,17 +255,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onBackPressed() {
-
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
         if(mMap!=null){
             reloadMap(mMap);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     @Override
@@ -213,36 +276,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
-                @Override
-                public View getInfoWindow(Marker arg0) {
-                    return null;
-                }
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
 
-                @Override
-                public View getInfoContents(Marker marker) {
+            @Override
+            public View getInfoContents(Marker marker) {
 
-                    Context mContext = getApplicationContext();
+                Context mContext = getApplicationContext();
 
-                    LinearLayout info = new LinearLayout(mContext);
-                    info.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout info = new LinearLayout(mContext);
+                info.setOrientation(LinearLayout.VERTICAL);
 
-                    TextView title = new TextView(mContext);
-                    title.setTextColor(Color.BLACK);
-                    title.setGravity(Gravity.CENTER);
-                    title.setTypeface(null, Typeface.BOLD);
-                    title.setText(marker.getTitle());
+                TextView title = new TextView(mContext);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
 
-                    TextView snippet = new TextView(mContext);
-                    snippet.setTextColor(Color.GRAY);
-                    snippet.setText(marker.getSnippet());
+                TextView snippet = new TextView(mContext);
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
 
-                    info.addView(title);
-                    info.addView(snippet);
+                info.addView(title);
+                info.addView(snippet);
 
-                    return info;
-                }
-            });
-        }
+                return info;
+            }
+        });
+    }
 
     public void reloadMap(GoogleMap googleMap) {
 
@@ -301,127 +364,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 dialog.hide();
         }
     }
-
-
-    /*public void buttonOnClickShare(View v) {
-        //screenShot = getScreenShot(v);
-        if (shouldAskPermission()){
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
-        }
-        else{
-            captureScreen();
-            //File file = saveBitmap(screenShot);
-            //shareImage(file);
-        }
-    }*/
-
-    /*public static Bitmap getScreenShot(View view) {
-        View screenView = view.getRootView();
-        screenView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
-        screenView.setDrawingCacheEnabled(false);
-        return bitmap;
-    }
-
-    private void shareImage(File file){
-        Uri uri = Uri.fromFile(file);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("image/*");
-
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "These are people around the area looking to get things hauled!");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(intent, "Share Screenshot Using:"));
-    }
-    public File saveBitmap(Bitmap bitmap) {
-        File imagePath = new File(Environment.getExternalStorageDirectory() + "/screenshot.png");
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(imagePath);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            Log.e("GREC", e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e("GREC", e.getMessage(), e);
-        }return imagePath;
-    }
-    private boolean shouldAskPermission(){
-
-        return(Build.VERSION.SDK_INT> Build.VERSION_CODES.LOLLIPOP_MR1);
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // save file
-                captureScreen();
-            } else {
-                Toast.makeText(getApplicationContext(), "PERMISSION_DENIED", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    public void captureScreen() {
-        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-
-            @Override
-            public void onSnapshotReady(Bitmap snapshot) {
-                // TODO Auto-generated method stub
-                Bitmap bitmap = snapshot;
-
-                OutputStream fout = null;
-
-                String filePath = System.currentTimeMillis() + ".jpeg";
-                Log.d("captureDebug", "filePath is " + filePath);
-                try {
-                    fout = openFileOutput(filePath,
-                            MODE_WORLD_READABLE);
-
-                    // Write the string to the file
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
-                    fout.flush();
-                    fout.close();
-                }
-                catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    Log.d("ImageCapture", "FileNotFoundException");
-                    Log.d("ImageCapture", e.getMessage());
-                    filePath = "";
-                }
-                catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    Log.d("ImageCapture", "IOException");
-                    Log.d("ImageCapture", e.getMessage());
-                    filePath = "";
-                }
-
-                openShareImageDialog(filePath);
-            }
-        };
-
-        mMap.snapshot(callback);
-    }
-    public void openShareImageDialog(String filePath) {
-        File file = this.getFileStreamPath(filePath);
-
-        if(!filePath.equals("")) {
-            Log.d("shareDebug", "filePath is " + filePath);
-            final ContentValues values = new ContentValues(2);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-            final Uri contentUriFile = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-            intent.setType("image/jpeg");
-            intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
-            startActivity(Intent.createChooser(intent, "Share Image"));
-        } else {
-            //This is a custom class I use to show dialogs...simply replace this with whatever you want to show an error message, Toast, etc.
-            Toast.makeText(this, "Sharing Fail", Toast.LENGTH_LONG).show();
-        }
-    }*/
 }
