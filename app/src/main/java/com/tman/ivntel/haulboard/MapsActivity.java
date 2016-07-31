@@ -272,43 +272,55 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        reloadMap(mMap);
-
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
+        firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public View getInfoWindow(Marker arg0) {
-                return null;
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists() == true) {
+                    reloadMap(mMap);
+
+                    mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                        @Override
+                        public View getInfoWindow(Marker arg0) {
+                            return null;
+                        }
+
+                        @Override
+                        public View getInfoContents(Marker marker) {
+
+                            Context mContext = getApplicationContext();
+
+                            LinearLayout info = new LinearLayout(mContext);
+                            info.setOrientation(LinearLayout.VERTICAL);
+
+                            TextView title = new TextView(mContext);
+                            title.setTextColor(Color.BLACK);
+                            title.setGravity(Gravity.CENTER);
+                            title.setTypeface(null, Typeface.BOLD);
+                            title.setText(marker.getTitle());
+
+                            TextView snippet = new TextView(mContext);
+                            snippet.setTextColor(Color.GRAY);
+                            snippet.setText(marker.getSnippet());
+
+                            info.addView(title);
+                            info.addView(snippet);
+
+                            return info;
+                        }
+                    });
+                } else {
+                    LatLng northAmerica = new LatLng(48.960585, -97.246712);
+                    mMap.addMarker(new MarkerOptions().position(northAmerica).draggable(true).title("No Active Posts"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(northAmerica, 3));//zoom level = 16 goes up to 21
+                }
             }
-
             @Override
-            public View getInfoContents(Marker marker) {
-
-                Context mContext = getApplicationContext();
-
-                LinearLayout info = new LinearLayout(mContext);
-                info.setOrientation(LinearLayout.VERTICAL);
-
-                TextView title = new TextView(mContext);
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
-                title.setText(marker.getTitle());
-
-                TextView snippet = new TextView(mContext);
-                snippet.setTextColor(Color.GRAY);
-                snippet.setText(marker.getSnippet());
-
-                info.addView(title);
-                info.addView(snippet);
-
-                return info;
+            public void onCancelled(FirebaseError arg0) {
             }
         });
     }
-
     public void reloadMap(GoogleMap googleMap) {
-
         mMap = googleMap;
         showProgress(true);
         firebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -340,9 +352,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     mMap.addMarker(new MarkerOptions().position(job).title("JOB").snippet("Item: " + item + "\n" + "Date: " + date + "\n" + "Time: " + time + "\n" + "Contact: " + contact).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(job, 2));//zoom level = 16 goes up to 21
-
+                    }
                 }
-            }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {

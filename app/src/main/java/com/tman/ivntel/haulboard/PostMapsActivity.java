@@ -423,7 +423,8 @@ public class PostMapsActivity extends FragmentActivity implements OnMapReadyCall
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        finish();
+        Intent i = new Intent(PostMapsActivity.this, MapsActivity.class);
+        startActivity(i);
     }
 
     private void requestNewInterstitial()
